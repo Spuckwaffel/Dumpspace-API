@@ -85,8 +85,6 @@ void DSAPI::downloadContent(contentTypes types)
 	if (engine.empty() || location.empty())
 		throw std::exception("engine or location of the target game ID could not be found!");
 
-	printf("engine: %s, location: %s\n", engine.c_str(), location.c_str());
-
 	auto parse = [&](const std::string& data, nlohmann::json& json)
 	{
 		json = nlohmann::json::parse(data.c_str(), nullptr, false);
@@ -176,6 +174,16 @@ void DSAPI::downloadContent(contentTypes types)
 			}
 		}
 	}
+
+	if (types & contentTypes::offsets)
+	{
+		parse(downloadGZIP(website + engine + "/" + location + "/OffsetsInfo.json.gz"), offsetJson);
+
+		for (auto& json : offsetJson["data"])
+		{
+			offsetMap.insert(std::pair(json[0], static_cast<int>(json[1])));
+		}
+	}
 		
 	curl_easy_cleanup(curl);
 	puts("downloaded all content!");
@@ -206,6 +214,13 @@ std::string DSAPI::getEnumName(const std::string& enumClass, uint64_t value)
 {
 	const auto it = enumNameMap.find(enumClass + std::to_string(value));
 	if (it == enumNameMap.end()) return 0;
+	return it->second;
+}
+
+uint64_t DSAPI::getOffset(const std::string& name)
+{
+	const auto it = offsetMap.find(name);
+	if (it == offsetMap.end()) return 0;
 	return it->second;
 }
 

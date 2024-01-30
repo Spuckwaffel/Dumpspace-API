@@ -16,7 +16,8 @@ public:
 		structs = 1 << 2,
 		enums = 1 << 3,
 		functions = 1 << 4,
-		all = classes | structs | enums | functions,
+		offsets = 1 << 5,
+		all = classes | structs | enums | functions | offsets,
 	};
 
 	// offsetInfo struct
@@ -52,13 +53,14 @@ private:
 	nlohmann::json structJson = nlohmann::detail::value_t::discarded;
 	nlohmann::json enumJson = nlohmann::detail::value_t::discarded;
 	nlohmann::json funcJson = nlohmann::detail::value_t::discarded;
+	nlohmann::json offsetJson = nlohmann::detail::value_t::discarded;
 
 	//unordered maps for fast gathering of info
-	std::unordered_map<std::string, OffsetInfo> classMemberMap; //classname + varname -> OffsetInfo
-	std::unordered_map<std::string, int> classSizeMap; //classname -> size
-	std::unordered_map<std::string, uint64_t> functionOffsetMap; //classname + function name -> offset
+	std::unordered_map<std::string, OffsetInfo> classMemberMap; // classname + varname -> OffsetInfo
+	std::unordered_map<std::string, int> classSizeMap; // classname -> size
+	std::unordered_map<std::string, uint64_t> functionOffsetMap; // classname + function name -> offset
 	std::unordered_map<std::string, std::string>enumNameMap; // enum class name + enum value -> enum name
-
+	std::unordered_map<std::string, uint64_t> offsetMap; // offset name -> offset
 	/**
 	 * \brief downloads the content of the given URL and decompresses the data
 	 * \param url url to the compressed GZIP data
@@ -115,6 +117,13 @@ public:
 	 * \return the enum name
 	 */
 	std::string getEnumName(const std::string& enumClass, uint64_t value);
+
+	/**
+	 * \brief gets the offset for the given name of the offset (Offsets tab! Not class offsets)
+	 * \param name name of the offset
+	 * \return the offset
+	 */
+	uint64_t getOffset(const std::string& name);
 };
 
 

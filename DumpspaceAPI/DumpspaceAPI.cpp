@@ -11,6 +11,9 @@ int main()
     // downloads all JSONs to use the API
     api.downloadContent();
 
+    const auto UWorldOffset = api.getOffset("OFFSET_UWORLD");
+    printf("UWorld offset: 0x%llX\n", UWorldOffset);
+
     // gets the size of any defined class or struct
     const auto classSize = api.getSizeofClass("AActor");
     printf("AActor class size: 0x%X\n", classSize);
