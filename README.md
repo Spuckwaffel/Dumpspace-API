@@ -2,6 +2,11 @@
 
 The dumpspace API allows you to get your Games' info directly from the Dumpspace website to use it in your C++ project.
 
+This library uses [Curl](https://github.com/curl/curl), [Zlib](https://github.com/madler/zlib), [OpenSSL](https://github.com/openssl/openssl) and [JSON](https://github.com/nlohmann/json).
+Please look up the licenses for these projects. 
+
+Additionally, in the ``libs/`` folder are precompiled libraries for the sake of clarity and demonstration, however I **strongly suggest** to compile the libraries on your own and use them instead to have the latest version and using precompiled libraries from the internet is bad practice in general, you never know whats in them.
+
 ### Example
 All examples are shown within the ``DumpspaceAPI.cpp`` file:
 
