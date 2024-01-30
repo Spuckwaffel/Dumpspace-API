@@ -11,6 +11,7 @@ int main()
     // downloads all JSONs to use the API
     api.downloadContent();
 
+    // gets any offset of the OFFSETS tab
     const auto UWorldOffset = api.getOffset("OFFSET_UWORLD");
     printf("UWorld offset: 0x%llX\n", UWorldOffset);
 
