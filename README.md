@@ -69,3 +69,9 @@ enum class EFortRarity : uint8_t {
 const auto enumName = api.getEnumName("EFortRarity", 4);
 printf("EFortRarity type 4: %s\n", enumName.c_str());
 ```
+
+### Showcase
+
+Compiling the project would display this:
+
+![alt text](image.png)
