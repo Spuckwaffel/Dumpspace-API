@@ -21,6 +21,11 @@ DSAPI api = DSAPI("6b77eceb");
 ```c++
 api.downloadContent();
 ```
+- Gets any offset of the OFFSETS tab
+```c++
+const auto UWorldOffset = api.getOffset("OFFSET_UWORLD");
+printf("UWorld offset: 0x%llX\n", UWorldOffset);
+```
 
 - Gets the size of any defined class or struct
 ```c++
