@@ -4,7 +4,6 @@
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
 
-
 class DSAPI
 {
 public:
@@ -125,5 +124,3 @@ public:
 	 */
 	uint64_t getOffset(const std::string& name);
 };
-
-

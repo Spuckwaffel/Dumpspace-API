@@ -9,7 +9,8 @@ size_t writefunc(void* ptr, size_t size, size_t nmemb, std::string* s)
 	return size * nmemb;
 }
 
-size_t writefunc_2(void* contents, size_t size, size_t nmemb, std::vector<char>* memory) {
+size_t writefunc_2(void* contents, size_t size, size_t nmemb, std::vector<char>* memory) 
+{
 	const size_t total_size = size * nmemb;
 	memory->insert(memory->end(), static_cast<char*>(contents), static_cast<char*>(contents) + total_size);
 	return total_size;
@@ -36,7 +37,8 @@ void DSAPI::downloadGameList(CURL* curl)
 {
 	static bool alreadyDownloaded = false;
 
-	if (alreadyDownloaded) return;
+	if (alreadyDownloaded) 
+		return;
 
 	curl_easy_setopt(curl, CURLOPT_URL, gameList.c_str());
 
@@ -76,7 +78,7 @@ void DSAPI::downloadContent(contentTypes types)
 
 	for(auto jsonItem : gameListJson["games"])
 	{
-		if(jsonItem.value("hash", "") == this->gameID)
+		if (jsonItem.value("hash", "") == this->gameID)
 		{
 			engine = jsonItem.value("engine", "");
 			location = jsonItem.value("location", "");
@@ -101,7 +103,7 @@ void DSAPI::downloadContent(contentTypes types)
 			for (auto& innerJson : it.value())
 			{
 				it = innerJson.begin();
-				if(it.key() == "__MDKClassSize")
+				if (it.key() == "__MDKClassSize")
 				{
 					classSizeMap.insert(std::pair(className, static_cast<int>(it.value())));
 					continue;
@@ -114,7 +116,8 @@ void DSAPI::downloadContent(contentTypes types)
 				info.size = static_cast<int>(it.value()[2]);
 				info.isBit = it.value().size() == 4;
 				info.valid = true;
-				if (info.isBit) {
+				if (info.isBit) 
+				{
 					info.bitOffset = static_cast<int>(it.value()[3]);
 					classMemberMap.insert(std::pair(className + it.key().substr(0, it.key().length() - 4), info));
 				}
@@ -125,7 +128,7 @@ void DSAPI::downloadContent(contentTypes types)
 		}
 	};
 
-	if(types & contentTypes::classes)
+	if (types & contentTypes::classes)
 	{
 		parse(downloadGZIP(website + engine + "/" + location + "/ClassesInfo.json.gz"), classJson);
 
@@ -223,4 +226,3 @@ uint64_t DSAPI::getOffset(const std::string& name)
 	if (it == offsetMap.end()) return 0;
 	return it->second;
 }
-
