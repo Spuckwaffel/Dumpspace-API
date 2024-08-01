@@ -76,6 +76,8 @@ void DSAPI::downloadContent(contentTypes types)
 {
 	downloadGameList(curl);
 
+	int fileVersion = 0;
+
 	for(auto jsonItem : gameListJson["games"])
 	{
 		if (jsonItem.value("hash", "") == this->gameID)
@@ -114,12 +116,25 @@ void DSAPI::downloadContent(contentTypes types)
 				OffsetInfo info;
 				info.offset = static_cast<int>(it.value()[1]);
 				info.size = static_cast<int>(it.value()[2]);
-				info.isBit = it.value().size() == 4;
+
+				if(fileVersion == 10201)
+					info.isBit = it.value().size() == 4;
+				else if (fileVersion == 10202)
+					info.isBit = it.value().size() == 5;
 				info.valid = true;
 				if (info.isBit) 
 				{
-					info.bitOffset = static_cast<int>(it.value()[3]);
-					classMemberMap.insert(std::pair(className + it.key().substr(0, it.key().length() - 4), info));
+					if (fileVersion == 10201)
+					{
+						info.bitOffset = static_cast<int>(it.value()[3]);
+						classMemberMap.insert(std::pair(className + it.key().substr(0, it.key().length() - 4), info));
+					}
+						
+					else if (fileVersion == 10202)
+					{
+						info.bitOffset = static_cast<int>(it.value()[4]);
+						classMemberMap.insert(std::pair(className + it.key(), info));
+					}
 				}
 				else
 					classMemberMap.insert(std::pair(className + it.key(), info));
@@ -132,18 +147,26 @@ void DSAPI::downloadContent(contentTypes types)
 	{
 		parse(downloadGZIP(website + engine + "/" + location + "/ClassesInfo.json.gz"), classJson);
 
+		fileVersion = classJson.value("version", 0);
+
 		parseClassInfo(classJson["data"]);
 	}
 		
 	if (types & contentTypes::structs)
 	{
 		parse(downloadGZIP(website + engine + "/" + location + "/StructsInfo.json.gz"), structJson);
+
+		fileVersion = structJson.value("version", 0);
+
 		parseClassInfo(structJson["data"]);
 	}
 		
 	if (types & contentTypes::enums)
 	{
 		parse(downloadGZIP(website + engine + "/" + location + "/EnumsInfo.json.gz"), enumJson);
+
+		fileVersion = enumJson.value("version", 0);
+
 		for (auto& json : enumJson["data"])
 		{
 			auto it = json.begin();
@@ -163,6 +186,9 @@ void DSAPI::downloadContent(contentTypes types)
 	{
 		parse(downloadGZIP(website + engine + "/" + location + "/FunctionsInfo.json.gz"), funcJson);
 
+		fileVersion = funcJson.value("version", 0);
+
+
 		for (auto& json : funcJson["data"])
 		{
 			auto it = json.begin();
@@ -181,6 +207,9 @@ void DSAPI::downloadContent(contentTypes types)
 	if (types & contentTypes::offsets)
 	{
 		parse(downloadGZIP(website + engine + "/" + location + "/OffsetsInfo.json.gz"), offsetJson);
+
+		fileVersion = offsetJson.value("version", 0);
+
 
 		for (auto& json : offsetJson["data"])
 		{
