@@ -33,8 +33,8 @@ public:
 private:
 
 	// Static variables, shouldnt change
-	static inline std::string website = "https://dumpspace.spuckwaffel.com/Games/";
-	static inline std::string gameList = "https://dumpspace.spuckwaffel.com/Games/GameList.json";
+	static inline std::string website = "https://raw.githubusercontent.com/Spuckwaffel/dumpspace/refs/heads/main/Games/";
+	static inline std::string gameList = "https://raw.githubusercontent.com/Spuckwaffel/dumpspace/refs/heads/main/Games/GameList.json";
 
 	// Our curl object
 	CURL* curl;
